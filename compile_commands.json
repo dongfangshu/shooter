@@ -1,0 +1,6 @@
+[
+{
+  "directory": "D:\\Project\\shooter",
+  "arguments": ["C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\bin\\HostX64\\x64\\cl.exe", "/c", "/nologo", "/MDd", "/Zi", "/FS", "/Fdbuild\\windows\\x64\\debug\\compile.shooter.pdb", "/Od", "/std:c++20", "/EHsc", "/IC:\\Users\\admin\\AppData\\Local\\.xmake\\packages\\l\\libsdl2\\2.32.2\\d5f7da08912b48fca9b47aad564eb450\\include", "/IC:\\Users\\admin\\AppData\\Local\\.xmake\\packages\\l\\libsdl2\\2.32.2\\d5f7da08912b48fca9b47aad564eb450\\include\\SDL2", "/Fobuild\\.objs\\shooter\\windows\\x64\\debug\\src\\main.cpp.obj", "src\\main.cpp"],
+  "file": "src\\main.cpp"
+}]
