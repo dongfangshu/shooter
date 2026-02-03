@@ -1,11 +1,17 @@
 add_rules("mode.debug", "mode.release")
-add_requires("libsdl2", "libsdl2_ttf")
+add_requires("libsdl2", "libsdl2_ttf", "libsdl2_image")
 
 set_languages("c++20")
 target("shooter")
     set_kind("binary")
     add_files("src/*.cpp")
-    add_packages("libsdl2", "libsdl2_ttf")
+    add_cxxflags("/utf-8")
+    add_packages("libsdl2", "libsdl2_ttf", "libsdl2_image")
+    after_build(function (target)
+        local install_dir = path.join(target:targetdir(), "assets")
+        os.mkdir(install_dir)
+        os.cp("assets/*", install_dir)
+    end)
 --
 -- If you want to known more usage about xmake, please see https://xmake.io
 --

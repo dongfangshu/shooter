@@ -2,15 +2,19 @@
 #include <iostream>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
+#include <SDL2/SDL_image.h>
 #include <format>
 #include <chrono>
-#include <filesystem>  // C++17
+#include <filesystem> // C++17
+#include "AssetManager.h"
+#include <windows.h>
 
 int FRAME = 0;
 const int FRAME_RATE = 60; // 帧率
 TTF_Font *font;
 SDL_Renderer *render;
 SDL_Window *window;
+AssetManager assetManager(render);
 void GameLoop();
 void DrawGizmos(SDL_Renderer *render);
 void RenderLoop(SDL_Renderer *render);
@@ -18,8 +22,10 @@ void renderText(const std::string &text, int x, int y, SDL_Color color = {255, 2
 
 int main(int argc, char **argv)
 {
-        std::cout << "当前工作目录: " 
-                  << std::filesystem::current_path() << std::endl;
+    SetConsoleOutputCP(CP_UTF8);
+    SetConsoleCP(CP_UTF8);
+    std::cout << "当前工作目录: "
+              << std::filesystem::current_path() << std::endl;
 
     // 初始化sdl
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
@@ -34,8 +40,14 @@ int main(int argc, char **argv)
         return 1;
     }
     printf("TTF_Init success\n");
+    int imgFlags = IMG_INIT_PNG | IMG_INIT_JPG;
+    if (IMG_Init(imgFlags) != imgFlags)
+    {
+        printf("IMG_Init Error: %s\n", IMG_GetError());
+        return 1;
+    }
+    printf("IMG_Init success\n");
 
-    
     int initPosX = SDL_WINDOWPOS_UNDEFINED;
     int initPosY = SDL_WINDOWPOS_UNDEFINED;
     int width = 800;
@@ -74,7 +86,9 @@ int main(int argc, char **argv)
         printf("TTF_OpenFont Error: %s\n", TTF_GetError());
         return 1;
     }
-    
+
+    assetManager = AssetManager(render);
+
     SDL_Event event;
     // char title[256];
     // 绘制
@@ -92,10 +106,7 @@ int main(int argc, char **argv)
         DrawGizmos(render);
         auto end = std::chrono::high_resolution_clock::now();
         auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
-        if (duration.count() < 1000 / FRAME_RATE)
-        {
-            SDL_Delay(1000 / FRAME_RATE - duration.count());
-        }
+        SDL_Delay(FRAME_RATE);
         SDL_SetRenderDrawColor(render, 0, 0, 0, 255); // 用默认颜色清屏
         SDL_RenderClear(render);
     }
@@ -112,19 +123,34 @@ void GameLoop()
 }
 void DrawGizmos(SDL_Renderer *render)
 {
-    SDL_SetRenderDrawColor(render, 70, 70, 70, 255);
-    auto title = std::format("frame:{}", FRAME);
-    renderText(title, 10, 10);
-    SDL_Rect rect = {0, 0, 300, 100};
-    SDL_RenderFillRect(render, &rect);
+    // SDL_SetRenderDrawColor(render, 70, 70, 70, 255);
+    // auto title = std::format("frame:{}", FRAME);
+    // renderText(title, 10, 10);
+    // SDL_Rect rect = {0, 0, 300, 100};
+    // SDL_RenderFillRect(render, &rect);
 }
+SDL_Texture *texture;
 void RenderLoop(SDL_Renderer *render)
 {
     SDL_SetRenderDrawColor(render, 255, 0, 0, 255);
-    // 对窗口宽度取余
     int windowWidth = 800;
     SDL_Rect rect = {FRAME % windowWidth, 100, 100, 100};
     SDL_RenderFillRect(render, &rect);
+    if (texture == NULL)
+    {
+        printf("load texture \n");
+        texture = assetManager.LoadTextureAtPath("assets\\image\\fire.png");
+        if (texture == NULL)
+        {
+            printf("load texture failed\n");
+        }
+    }
+    if (texture != NULL)
+    {
+        SDL_Rect textureRect = {400, 400, 100, 100};
+        SDL_RenderCopy(render, texture, nullptr, &textureRect);
+    }
+
     SDL_RenderPresent(render);
 }
 SDL_Texture *createTextTexture(const std::string &text,

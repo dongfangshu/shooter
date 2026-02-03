@@ -6,8 +6,6 @@
             ],
             "name": "shooter",
             "includePath": [
-                "C:\\Users\\admin\\AppData\\Local\\.xmake\\packages\\l\\libsdl2",
-                "C:\\Users\\admin\\AppData\\Local\\.xmake\\packages\\l\\libsdl2_ttf"
             ],
             "cppStandard": "c++17"
         }
