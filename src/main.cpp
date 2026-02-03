@@ -8,45 +8,37 @@
 #include <filesystem> // C++17
 #include "AssetManager.h"
 #include <windows.h>
-
-int FRAME = 0;
-const int FRAME_RATE = 60; // 帧率
-TTF_Font *font;
-SDL_Renderer *render;
+#include "debug.h"
+#include "game.h"
 SDL_Window *window;
-AssetManager assetManager(render);
-void GameLoop();
-void DrawGizmos(SDL_Renderer *render);
-void RenderLoop(SDL_Renderer *render);
-void renderText(const std::string &text, int x, int y, SDL_Color color = {255, 255, 255, 255});
+Game *game;
 
 int main(int argc, char **argv)
 {
     SetConsoleOutputCP(CP_UTF8);
     SetConsoleCP(CP_UTF8);
-    std::cout << "当前工作目录: "
-              << std::filesystem::current_path() << std::endl;
+    Debug::Log("当前工作目录: " + std::filesystem::current_path().string());
 
     // 初始化sdl
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
     {
-        printf("SDL_Init Error: %s\n", SDL_GetError());
+        Debug::Error("SDL_Init Error: " + std::string(SDL_GetError()));
         return 1;
     }
-    printf("SDL_Init success\n");
+    Debug::Log("SDL_Init success");
     if (TTF_Init() != 0)
     {
-        printf("TTF_Init Error: %s\n", TTF_GetError());
+        Debug::Error("TTF_Init Error: " + std::string(TTF_GetError()));
         return 1;
     }
-    printf("TTF_Init success\n");
+    Debug::Log("TTF_Init success");
     int imgFlags = IMG_INIT_PNG | IMG_INIT_JPG;
     if (IMG_Init(imgFlags) != imgFlags)
     {
-        printf("IMG_Init Error: %s\n", IMG_GetError());
+        Debug::Error("IMG_Init Error: " + std::string(IMG_GetError()));
         return 1;
     }
-    printf("IMG_Init success\n");
+    Debug::Log("IMG_Init success");
 
     int initPosX = SDL_WINDOWPOS_UNDEFINED;
     int initPosY = SDL_WINDOWPOS_UNDEFINED;
@@ -63,130 +55,19 @@ int main(int argc, char **argv)
     );
     if (window == NULL)
     {
-        printf("SDL_CreateWindow Error: %s\n", SDL_GetError());
+        Debug::Error("SDL_CreateWindow Error: " + std::string(SDL_GetError()));
         SDL_Quit();
         return 1;
     }
-    printf("SDL_CreateWindow success\n");
-
-    render = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-    if (render == NULL)
+    Debug::Log("SDL_CreateWindow success");
+    
+    game = new Game(window);
+    if (!game->Init())
     {
-        printf("SDL_CreateRenderer Error: %s\n", SDL_GetError());
-        SDL_DestroyWindow(window);
-        SDL_DestroyRenderer(render);
-        SDL_Quit();
+        Debug::Error("Game Init failed");
         return 1;
     }
-    printf("SDL_CreateRenderer success\n");
-
-    font = TTF_OpenFont("assets\\font\\VonwaonBitmap-16px.ttf", 16);
-    if (font == NULL)
-    {
-        printf("TTF_OpenFont Error: %s\n", TTF_GetError());
-        return 1;
-    }
-
-    assetManager = AssetManager(render);
-
-    SDL_Event event;
-    // char title[256];
-    // 绘制
-    while (true)
-    {
-        if (SDL_PollEvent(&event) && event.type == SDL_QUIT)
-        {
-            printf("SDL_QUIT event\n");
-            break;
-        }
-        FRAME++;
-        auto start = std::chrono::high_resolution_clock::now();
-        GameLoop();
-        RenderLoop(render);
-        DrawGizmos(render);
-        auto end = std::chrono::high_resolution_clock::now();
-        auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
-        SDL_Delay(FRAME_RATE);
-        SDL_SetRenderDrawColor(render, 0, 0, 0, 255); // 用默认颜色清屏
-        SDL_RenderClear(render);
-    }
-    // 清理SDL资源
-    SDL_DestroyRenderer(render);
-    SDL_DestroyWindow(window);
-    SDL_Quit();
-    printf("SDL_CLEAR success\n");
+    game->Run();
 
     return 0;
-}
-void GameLoop()
-{
-}
-void DrawGizmos(SDL_Renderer *render)
-{
-    // SDL_SetRenderDrawColor(render, 70, 70, 70, 255);
-    // auto title = std::format("frame:{}", FRAME);
-    // renderText(title, 10, 10);
-    // SDL_Rect rect = {0, 0, 300, 100};
-    // SDL_RenderFillRect(render, &rect);
-}
-SDL_Texture *texture;
-void RenderLoop(SDL_Renderer *render)
-{
-    SDL_SetRenderDrawColor(render, 255, 0, 0, 255);
-    int windowWidth = 800;
-    SDL_Rect rect = {FRAME % windowWidth, 100, 100, 100};
-    SDL_RenderFillRect(render, &rect);
-    if (texture == NULL)
-    {
-        printf("load texture \n");
-        texture = assetManager.LoadTextureAtPath("assets\\image\\fire.png");
-        if (texture == NULL)
-        {
-            printf("load texture failed\n");
-        }
-    }
-    if (texture != NULL)
-    {
-        SDL_Rect textureRect = {400, 400, 100, 100};
-        SDL_RenderCopy(render, texture, nullptr, &textureRect);
-    }
-
-    SDL_RenderPresent(render);
-}
-SDL_Texture *createTextTexture(const std::string &text,
-                               SDL_Color color)
-{
-    // 渲染文字到surface
-    SDL_Surface *textSurface = TTF_RenderUTF8_Blended(font, text.c_str(), color);
-    if (!textSurface)
-    {
-        std::cerr << "文字Surface创建失败: " << TTF_GetError() << std::endl;
-        return nullptr;
-    }
-
-    // 创建纹理
-    SDL_Texture *texture = SDL_CreateTextureFromSurface(render, textSurface);
-    SDL_FreeSurface(textSurface); // 释放surface
-
-    return texture;
-}
-void renderText(const std::string &text, int x, int y,
-                SDL_Color color)
-{
-    SDL_Texture *texture = createTextTexture(text, color);
-    if (!texture)
-        return;
-
-    // 获取纹理尺寸
-    int width, height;
-    SDL_QueryTexture(texture, nullptr, nullptr, &width, &height);
-
-    // 设置渲染位置
-    SDL_Rect destRect = {x, y, width, height};
-
-    // 渲染纹理
-    SDL_RenderCopy(render, texture, nullptr, &destRect);
-
-    // 释放纹理
-    SDL_DestroyTexture(texture);
 }

@@ -1,6 +1,7 @@
 #include "AssetManager.h"
 #include <unordered_map>
-
+#include "debug.h"
+#include "SDL_image.h"
 SDL_Texture *AssetManager::LoadTextureAtPath(const std::string &path)
 {
     // 先检查字典中是否已经加载了这个纹理
@@ -11,7 +12,7 @@ SDL_Texture *AssetManager::LoadTextureAtPath(const std::string &path)
     SDL_Texture *texture = IMG_LoadTexture(render, path.c_str());
     if (texture == NULL)
     {
-        printf("IMG_LoadTexture Error: %s\n", IMG_GetError());
+        Debug::Error("IMG_LoadTexture Error: " + std::string(IMG_GetError()));
         return NULL;
     }
     // 存储到字典中
