@@ -4,9 +4,9 @@ class Scene
 private:
     /* data */
 public:
-    Scene(/* args */);
-    ~Scene();
-    virtual void Update();
-    virtual void Init();
-    virtual void Clear();
+    Scene() {}
+    virtual ~Scene() {}
+    virtual void Update() = 0;
+    virtual void Init() = 0;
+    virtual void Clear() = 0;
 };

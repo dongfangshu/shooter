@@ -1,6 +1,6 @@
 #include "AssetManager.h"
 #include <unordered_map>
-#include "../debug.h"
+#include "../Debug/Debug.h"
 #include "SDL_image.h"
 SDL_Texture *AssetManager::LoadTextureAtPath(const std::string &path)
 {

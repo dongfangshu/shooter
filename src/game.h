@@ -2,6 +2,11 @@
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL_image.h>
 #include "Asset/AssetManager.h"
+#include "Scene/SceneManager.h"
+#include "Scene/StartScene.h"
+#include "Scene/GameScene.h"
+#include "Scene/EndScene.h"
+#include "Input/InputManager.h"
 
 class Game
 {

@@ -7,13 +7,16 @@
 #include <filesystem> // C++17
 #include "Asset/AssetManager.h"
 #include <windows.h>
-#include "debug.h"
+#include "Debug/Debug.h"
 #include "game.h"
+#include "Debug/StackTrace.h"
 SDL_Window *window;
 Game *game;
 
 int main(int argc, char **argv)
 {
+    StackTrace::Initialize();
+    
     SetConsoleOutputCP(CP_UTF8);
     SetConsoleCP(CP_UTF8);
     Debug::Log("当前工作目录: " + std::filesystem::current_path().string());
