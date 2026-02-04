@@ -1,4 +1,3 @@
-#define SDL_MAIN_HANDLED
 #include <iostream>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
@@ -6,7 +5,7 @@
 #include <format>
 #include <chrono>
 #include <filesystem> // C++17
-#include "AssetManager.h"
+#include "Asset/AssetManager.h"
 #include <windows.h>
 #include "debug.h"
 #include "game.h"

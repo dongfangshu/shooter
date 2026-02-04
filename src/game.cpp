@@ -1,10 +1,10 @@
 #include "game.h"
-#include "AssetManager.h"
+#include "Asset/AssetManager.h"
 #include "debug.h"
-#include "EventManager.h"
+#include "Event/EventManager.h"
 int FRAME = 0;
 const int FRAME_RATE = 60; // 帧率
-bool isRunning = false;
+// bool isRunning = false;
 Game::Game(SDL_Window *window)
 {
     this->window = window;
@@ -34,10 +34,6 @@ void Game::Run()
         while (SDL_PollEvent(&event)) {
             EventManager::onSDLEvent.emit({&event});
         }
-        // 渲染
-        SDL_RenderClear(render);
-        // 渲染游戏元素
-        SDL_RenderPresent(render);
         // 控制帧率
         SDL_Delay(1000 / FRAME_RATE);
         FRAME++;
@@ -52,13 +48,24 @@ bool Game::Init()
     }
     Debug::Log("SDL_CreateRenderer success");
     assetManager = new AssetManager(render);
-    EventManager::onSDLEvent += [](const SDLEventData& data)
+    EventManager::onSDLEvent += [this](const SDLEventData& data)
     {
         if (data.sdlEvent->type == SDL_QUIT)
         {
             Debug::Error("Quit Game");
-            isRunning = false;
         }
+        this->isRunning = false;
     };
     return true;
+}
+void Game::LogicUpdate()
+{
+
+}
+
+void Game::RenderLoop()
+{
+    SDL_RenderClear(render);
+    // 渲染游戏元素
+    SDL_RenderPresent(render);
 }
