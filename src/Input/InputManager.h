@@ -2,13 +2,14 @@
 #include <SDL2/SDL.h>
 #include <functional>
 #include <unordered_map>
-
+#include <queue>
 class InputManager
 {
 private:
     static InputManager* instance;
     std::unordered_map<SDL_Keycode, std::function<void()>> keyPressCallbacks;
     std::unordered_map<SDL_Keycode, bool> keyStates;
+    std::queue<SDL_Event> eventQueue;
     
     InputManager();
     ~InputManager();

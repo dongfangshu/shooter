@@ -1,6 +1,8 @@
 #pragma once
 #include <SDL2/SDL.h>
-
+#include <string>
+#include <vector>
+#include "BaseBehavior.h"
 struct PositionConfig
 {
     float x;
@@ -21,14 +23,20 @@ struct CollisionConfig
 struct BehaviorConfig
 {
     int behaviorType;
+    std::vector<BaseBehavior*> behaviors;
 };
-
+struct RenderConfig
+{
+    std::string texturePath;
+    int renderOrder;
+};
 struct EntityConfig
 {
     PositionConfig* positionConfig;
     MovementConfig* movementConfig;
     CollisionConfig* collisionConfig;
     BehaviorConfig* behaviorConfig;
+    RenderConfig* renderConfig;
     
     EntityConfig()
     {
@@ -36,6 +44,7 @@ struct EntityConfig
         movementConfig = nullptr;
         collisionConfig = nullptr;
         behaviorConfig = nullptr;
+        renderConfig = nullptr;
     }
     
     ~EntityConfig()
@@ -44,6 +53,7 @@ struct EntityConfig
         delete movementConfig;
         delete collisionConfig;
         delete behaviorConfig;
+        delete renderConfig;
     }
 };
 

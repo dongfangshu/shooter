@@ -33,6 +33,7 @@ void InputManager::HandleEvent(const SDL_Event& event)
     if (event.type == SDL_KEYDOWN)
     {
         SDL_Keycode key = event.key.keysym.sym;
+        // eventQueue.push(event);
         keyStates[key] = true;
         
         auto it = keyPressCallbacks.find(key);

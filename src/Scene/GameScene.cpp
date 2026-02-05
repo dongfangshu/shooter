@@ -12,6 +12,7 @@
 GameScene::GameScene(SDL_Renderer* renderer)
 {
     this->renderer = renderer;
+    this->collisionManager = nullptr;
 }
 
 GameScene::~GameScene()
@@ -21,6 +22,7 @@ GameScene::~GameScene()
 void GameScene::Init()
 {
     EntityManager* entityManager = EntityManager::GetInstance();
+    collisionManager = CollisionManager::GetInstance();
     
     EntityConfig* playerConfig = new EntityConfig();
     
@@ -84,6 +86,7 @@ void GameScene::Update()
 {
     EntityManager* entityManager = EntityManager::GetInstance();
     entityManager->Update();
+    collisionManager->Update();
     
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);

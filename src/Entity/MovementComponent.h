@@ -8,12 +8,12 @@ private:
     float speed;
 
 public:
-    MovementComponent(float speed)
+    MovementComponent(Entity* entity, float speed) : Component(entity)
     {
         this->speed = speed;
     }
     
-    MovementComponent(MovementConfig* config)
+    MovementComponent(Entity* entity, MovementConfig* config) : Component(entity)
     {
         this->speed = config->speed;
     }

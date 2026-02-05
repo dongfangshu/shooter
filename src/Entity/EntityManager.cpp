@@ -41,22 +41,22 @@ EntityHandle EntityManager::AddEntity(EntityConfig* config)
     
     if (config->positionConfig != nullptr)
     {
-        entity->AddComponent(new PositionComponent(config->positionConfig));
+        entity->AddComponent(new PositionComponent(config->positionConfig, entity));
     }
     
     if (config->movementConfig != nullptr)
     {
-        entity->AddComponent(new MovementComponent(config->movementConfig));
+        entity->AddComponent(new MovementComponent(entity, config->movementConfig));
     }
     
     if (config->collisionConfig != nullptr)
     {
-        entity->AddComponent(new CollisionComponent(config->collisionConfig));
+        entity->AddComponent(new CollisionComponent(config->collisionConfig, entity));
     }
     
     if (config->behaviorConfig != nullptr)
     {
-        entity->AddComponent(new BehaviorComponent(config->behaviorConfig));
+        entity->AddComponent(new BehaviorComponent(entity, config->behaviorConfig));
     }
     
     entities[entityID] = entity;

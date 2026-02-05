@@ -9,13 +9,8 @@ private:
     float y;
 
 public:
-    PositionComponent(float x, float y)
-    {
-        this->x = x;
-        this->y = y;
-    }
     
-    PositionComponent(PositionConfig* config)
+    PositionComponent(PositionConfig* config, Entity* entity) : Component(entity)
     {
         this->x = config->x;
         this->y = config->y;

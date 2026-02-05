@@ -1,9 +1,18 @@
 #pragma once
+class Entity;
 
 class Component
 {
+private:
+    Entity *entity;
+
 public:
-    Component() {}
+    // 定义组件迭代顺序
+
+    Component(Entity *entity)
+    {
+        this->entity = entity;
+    }
     virtual ~Component() {}
     virtual void Update() {}
 };
