@@ -1,6 +1,7 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL_image.h>
+#include <vector>
 #include "Asset/AssetManager.h"
 #include "Scene/SceneManager.h"
 #include "Scene/StartScene.h"
@@ -12,7 +13,7 @@ class Game
 {
     SDL_Window *window;
     SDL_Renderer *render;
-    AssetManager *assetManager;
+    //AssetManager *assetManager;
 
 public:
     Game(SDL_Window *window);
@@ -22,6 +23,6 @@ public:
 
 private:
     bool isRunning = false;
-    void LogicUpdate();
+    void LogicUpdate(const std::vector<SDL_Event>& frameEvents);
     void RenderLoop();
 };

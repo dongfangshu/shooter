@@ -15,13 +15,6 @@ EndScene::~EndScene()
 
 void EndScene::Init()
 {
-    font = TTF_OpenFont("assets/font/VonwaonBitmap-16px.ttf", 48);
-    if (font == nullptr)
-    {
-        Debug::Error("Failed to load font: " + std::string(TTF_GetError()));
-        return;
-    }
-    
     InputManager* inputManager = InputManager::GetInstance();
     inputManager->RegisterKeyPress(SDLK_SPACE, []() {
         SceneManager::ChangeScene("StartScene");

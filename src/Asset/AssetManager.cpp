@@ -2,6 +2,19 @@
 #include <unordered_map>
 #include "../Debug/Debug.h"
 #include "SDL_image.h"
+AssetManager* AssetManager::instance = nullptr;
+AssetManager* AssetManager::GetInstance()
+{
+    if (instance == nullptr)
+    {
+        instance = new AssetManager();
+    }
+    return instance;
+}
+void AssetManager::Init(SDL_Renderer* render)
+{
+    this->render = render;
+}
 SDL_Texture *AssetManager::LoadTextureAtPath(const std::string &path)
 {
     // 先检查字典中是否已经加载了这个纹理
@@ -19,6 +32,7 @@ SDL_Texture *AssetManager::LoadTextureAtPath(const std::string &path)
     textureMap[path] = texture;
     return texture;
 }
+AssetManager::AssetManager() {};
 AssetManager::~AssetManager()
 {
     for (auto &pair : textureMap)
