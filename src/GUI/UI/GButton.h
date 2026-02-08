@@ -23,6 +23,7 @@ public:
     GButton(SDL_Rect rect);
     ~GButton();
 
+    void SetUp() override;
     bool BubbleEvent(UIEventName name, const UIEvent& ev) override;
     void Update(UpdateContext* ctx) override;
 

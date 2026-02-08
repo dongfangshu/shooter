@@ -95,7 +95,7 @@ void Stage::InternalUpdate(const std::vector<SDL_Event>& events) {
 }
 
 void Stage::Update(UpdateContext* ctx) {
-    if (!IsVisible() || !ctx) return;
+    if (!IsVisible()) return;
     for (auto* child : GetChildren()) {
         if (child->IsVisible())
             child->Update(ctx);

@@ -36,18 +36,21 @@ void StartScene::Init() {
 
     SDL_Color textColor = {255, 255, 255, 255};
     GText* titleText = new GText("太空大战");
+    titleText->SetPosition({(SCREEN_W - titleText->GetRect().w) / 2, 120});
     titleText->SetColor(textColor);
     stage->AddChild(titleText);
 
-    GText* hintText = new GText("按下任意键进入游戏");
-    hintText->SetColor(textColor);
-    stage->AddChild(hintText);
+    // GText* hintText = new GText("按下任意键进入游戏");
+    // hintText->SetPosition({(SCREEN_W - hintText->GetRect().w) / 2, 520});
+    // hintText->SetColor(textColor);
+    // stage->AddChild(hintText);
 
     
 
     SDL_Rect btnRect = {(SCREEN_W - 200) / 2, 480, 200, 50};
     GButton* startBtn = new GButton(btnRect);
     startBtn->SetText("开始游戏");
+    startBtn->SetPosition({(SCREEN_W - startBtn->GetRect().w) / 2, 480});
     startBtn->SetOnClick([]() {
         Debug::Log("Start button clicked, changing to GameScene");
         SceneManager::ChangeScene("GameScene");

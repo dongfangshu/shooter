@@ -4,13 +4,22 @@
 #include "UIConfig.h"
 
 GButton::GButton(SDL_Rect rect)
-	: UIComponent(rect), onClick(nullptr) {
-	label = new GText("");
-	AddChild(label);
+	: UIComponent(rect), font(nullptr), onClick(nullptr) {
+    normalColor = buttonNormalColor;
+    hoverColor = buttonHoverColor;
+    pressedColor = buttonPressedColor;
+    currentColor = normalColor;
 }
 
 GButton::~GButton() {
     label = nullptr;  // 由基类析构统一删除 children
+}
+
+void GButton::SetUp() {
+    label = new GText("");
+	AddChild(label);
+    SDL_Rect buttonRect = GetRect();
+    label->SetPosition(SDL_Point{(buttonRect.w - label->GetRect().w) / 2, (buttonRect.h - label->GetRect().h) / 2});
 }
 
 bool GButton::BubbleEvent(UIEventName name, const UIEvent& ev) {
@@ -43,11 +52,11 @@ bool GButton::BubbleEvent(UIEventName name, const UIEvent& ev) {
 
 void GButton::Update(UpdateContext* ctx) {
     if (!IsVisible() || !ctx) return;
-    ctx->AddRenderCallback([this](SDL_Renderer* r) {
-        SDL_Rect rect = GetRect();
-        SDL_SetRenderDrawColor(r, currentColor.r, currentColor.g, currentColor.b, currentColor.a);
-        SDL_RenderFillRect(r, &rect);
-    });
+    // ctx->AddRenderCallback([this](SDL_Renderer* r) {
+    //     SDL_Rect rect = GetRect();
+    //     SDL_SetRenderDrawColor(r, currentColor.r, currentColor.g, currentColor.b, currentColor.a);
+    //     SDL_RenderFillRect(r, &rect);
+    // });
     for (auto* child : GetChildren()) {
         if (child->IsVisible())
             child->Update(ctx);

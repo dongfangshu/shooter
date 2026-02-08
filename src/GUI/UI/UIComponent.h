@@ -34,7 +34,7 @@ private:
 public:
     UIComponent(SDL_Rect rect);
     virtual ~UIComponent();
-
+    virtual void SetUp();
     virtual void Update(UpdateContext* ctx);
 
     // 事件冒泡：从当前节点向上传递，返回 true 表示已处理并停止冒泡
@@ -52,6 +52,9 @@ public:
 
     SDL_Rect GetRect() const;
     void SetRect(SDL_Rect newRect);
+    void SetPosition(int x, int y);
+    void SetPosition(SDL_Point pos);
+    SDL_Point GetPosition() const;
     bool IsVisible() const;
     void SetVisible(bool visible);
     bool IsEnabled() const;

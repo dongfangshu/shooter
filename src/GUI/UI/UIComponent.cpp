@@ -2,6 +2,7 @@
 #include "../UpdateContext.h"
 #include <algorithm>
 UIComponent::UIComponent(SDL_Rect rect) : rect(rect), isVisible(true), isEnabled(true) {
+        SetUp();
 }
 
 UIComponent::~UIComponent() {
@@ -59,6 +60,20 @@ void UIComponent::SetRect(SDL_Rect newRect) {
     rect = newRect;
 }
 
+void UIComponent::SetPosition(int x, int y) {
+    rect.x = x;
+    rect.y = y;
+}
+
+void UIComponent::SetPosition(SDL_Point pos) {
+    rect.x = pos.x;
+    rect.y = pos.y;
+}
+
+SDL_Point UIComponent::GetPosition() const {
+    return {rect.x, rect.y};
+}
+
 bool UIComponent::IsVisible() const {
     return isVisible;
 }
@@ -76,4 +91,6 @@ void UIComponent::SetEnabled(bool enabled) {
 }
 void UIComponent::SetRender(SDL_Renderer* render) {
     this->render = render;
+}
+void UIComponent::SetUp() {
 }

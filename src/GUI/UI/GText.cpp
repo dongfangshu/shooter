@@ -4,6 +4,7 @@
 #include "UIConfig.h"
 GText::GText(const std::string& text)
     : UIComponent({}) {
+        this->text = text;
     if (!text.empty()) {
         int w = 0, h = 0;
         TextUtil::MeasureText(GetFont(), text.c_str(), &w, &h);
@@ -34,7 +35,7 @@ void GText::UpdateTexture() {
 }
 
 void GText::Update(UpdateContext* ctx) {
-    if (!IsVisible() || !ctx) return;
+    if (!IsVisible()) return;
     if (isDirty && !text.empty()) {
         UpdateTexture();
         isDirty = false;
