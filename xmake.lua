@@ -12,6 +12,7 @@ target("shooter")
     if is_mode("debug") then
         add_defines("ENABLE_LOG")
     end
+    -- add_defines("ENABLE_INPUT_LOG")
     after_build(function (target)
         local install_dir = path.join(target:targetdir(), "assets")
         os.mkdir(install_dir)

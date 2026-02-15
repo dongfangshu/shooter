@@ -25,14 +25,16 @@ class UIComponent {
 protected:
     SDL_Renderer* render{nullptr};
 private:
-    SDL_Rect rect;
+    int width;
+    int height;
+    SDL_Point position;
     bool isVisible;
     bool isEnabled;
     UIComponent* parent{nullptr};
     std::vector<UIComponent*> children;
     
 public:
-    UIComponent(SDL_Rect rect);
+    UIComponent(int width, int height);
     virtual ~UIComponent();
     virtual void SetUp();
     virtual void Update(UpdateContext* ctx);
@@ -51,10 +53,14 @@ public:
     const std::vector<UIComponent*>& GetChildren() const { return children; }
 
     SDL_Rect GetRect() const;
-    void SetRect(SDL_Rect newRect);
     void SetPosition(int x, int y);
     void SetPosition(SDL_Point pos);
     SDL_Point GetPosition() const;
+    SDL_Point GetWorldPosition() const;
+    int GetWidth() const;
+    void SetWidth(int width);
+    int GetHeight() const;
+    void SetHeight(int height);
     bool IsVisible() const;
     void SetVisible(bool visible);
     bool IsEnabled() const;

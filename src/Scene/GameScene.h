@@ -8,7 +8,6 @@ class GameScene : public Scene
 {
 private:
     SDL_Renderer* renderer;
-    EntityHandle playerHandle;
     CollisionManager* collisionManager;
     
 public:

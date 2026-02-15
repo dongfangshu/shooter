@@ -4,7 +4,7 @@
 #include "Event/EventManager.h"
 #include "Scene/SceneManager.h"
 #include "Input/InputManager.h"
-#include "GUI/UI/Stage.h"
+#include "GUI/UI/Canvas.h"
 #include "GUI/UI/UIConfig.h"
 int FRAME = 0;
 const int FRAME_RATE = 60; // 帧率
@@ -99,10 +99,10 @@ void Game::LogicUpdate(const std::vector<SDL_Event>& frameEvents)
 {
     if (SceneManager::currentScene != nullptr)
     {
-        Stage* stage = SceneManager::currentScene->GetStage();
-        if (stage)
-            stage->InternalUpdate(frameEvents);
         SceneManager::currentScene->Update();
+        Canvas* canvas = SceneManager::currentScene->GetCanvas();
+        if (canvas)
+            canvas->InternalUpdate(frameEvents);
     }
 }
 

@@ -1,11 +1,12 @@
 #include "GImage.h"
 #include "../UpdateContext.h"
 
-GImage::GImage(SDL_Texture* texture) : UIComponent({0, 0, 0, 0}), texture(texture) {
+GImage::GImage(SDL_Texture* texture) : UIComponent(0, 0), texture(texture) {
     if (texture) {
         int w = 0, h = 0;
         SDL_QueryTexture(texture, nullptr, nullptr, &w, &h);
-        SetRect({0, 0, w, h});
+        SetWidth(w);
+        SetHeight(h);
     }
 }
 
@@ -16,7 +17,8 @@ GImage::~GImage() {
 void GImage::Update(UpdateContext* ctx) {
     if (!IsVisible() || !ctx || !texture) return;
     ctx->AddRenderCallback([this](SDL_Renderer* r) {
-        SDL_Rect rect = GetRect();
+        SDL_Point worldPos = GetWorldPosition();
+        SDL_Rect rect = {worldPos.x, worldPos.y, GetWidth(), GetHeight()};
         SDL_RenderCopy(r, texture, nullptr, &rect);
     });
 }
@@ -26,10 +28,8 @@ void GImage::SetTexture(SDL_Texture* newTexture) {
     if (texture) {
         int w = 0, h = 0;
         SDL_QueryTexture(texture, nullptr, nullptr, &w, &h);
-        SDL_Rect r = GetRect();
-        r.w = w;
-        r.h = h;
-        SetRect(r);
+        SetWidth(w);
+        SetHeight(h);
     }
 }
 

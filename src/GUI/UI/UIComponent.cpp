@@ -1,7 +1,7 @@
 #include "UIComponent.h"
 #include "../UpdateContext.h"
 #include <algorithm>
-UIComponent::UIComponent(SDL_Rect rect) : rect(rect), isVisible(true), isEnabled(true) {
+UIComponent::UIComponent(int width, int height) : width(width), height(height), position({0, 0}), isVisible(true), isEnabled(true) {
         SetUp();
 }
 
@@ -20,11 +20,14 @@ bool UIComponent::BubbleEvent(UIEventName name, const UIEvent& ev) {
 }
 
 void UIComponent::Update(UpdateContext* ctx) {
-    (void)ctx;
+    for (auto* child : children) {
+        if (child->IsVisible())
+            child->Update(ctx);
+    }
 }
 
 bool UIComponent::HitTest(int x, int y) {
-    return x >= rect.x && x < rect.x + rect.w && y >= rect.y && y < rect.y + rect.h;
+    return x >= position.x && x < position.x + width && y >= position.y && y < position.y + height;
 }
 
 UIComponent* UIComponent::HitTestTarget(int x, int y) {
@@ -42,6 +45,7 @@ void UIComponent::AddChild(UIComponent* child) {
     if (child->parent) child->parent->RemoveChild(child);
     child->parent = this;
     children.push_back(child);
+
 }
 
 void UIComponent::RemoveChild(UIComponent* child) {
@@ -53,25 +57,44 @@ void UIComponent::RemoveChild(UIComponent* child) {
 }
 
 SDL_Rect UIComponent::GetRect() const {
-    return rect;
-}
-
-void UIComponent::SetRect(SDL_Rect newRect) {
-    rect = newRect;
+    return {position.x, position.y, width, height};
 }
 
 void UIComponent::SetPosition(int x, int y) {
-    rect.x = x;
-    rect.y = y;
+    position.x = x;
+    position.y = y;
 }
 
 void UIComponent::SetPosition(SDL_Point pos) {
-    rect.x = pos.x;
-    rect.y = pos.y;
+    position = pos;
 }
 
 SDL_Point UIComponent::GetPosition() const {
-    return {rect.x, rect.y};
+    return position;
+}
+
+SDL_Point UIComponent::GetWorldPosition() const {
+    if (!parent) {
+        return position;
+    }
+    SDL_Point parentPos = parent->GetWorldPosition();
+    return {position.x + parentPos.x, position.y + parentPos.y};
+}
+
+int UIComponent::GetWidth() const {
+    return width;
+}
+
+void UIComponent::SetWidth(int width) {
+    this->width = width;
+}
+
+int UIComponent::GetHeight() const {
+    return height;
+}
+
+void UIComponent::SetHeight(int height) {
+    this->height = height;
 }
 
 bool UIComponent::IsVisible() const {
@@ -89,8 +112,13 @@ bool UIComponent::IsEnabled() const {
 void UIComponent::SetEnabled(bool enabled) {
     isEnabled = enabled;
 }
-void UIComponent::SetRender(SDL_Renderer* render) {
+void UIComponent::SetRender(SDL_Renderer *render)
+{
     this->render = render;
+    for (auto *child : children)
+    {
+        child->SetRender(render);
+    }
 }
 void UIComponent::SetUp() {
 }

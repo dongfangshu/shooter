@@ -1,7 +1,7 @@
 #pragma once
 #include <vector>
 
-class Stage;
+class Canvas;
 
 class Scene {
 public:
@@ -10,5 +10,5 @@ public:
     virtual void Update() = 0;
     virtual void Init() = 0;
     virtual void Clear() = 0;
-    virtual Stage* GetStage() { return nullptr; }
+    virtual Canvas* GetCanvas() { return nullptr; }
 };

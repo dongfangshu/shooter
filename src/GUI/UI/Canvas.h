@@ -6,19 +6,19 @@
 
 class UpdateContext;
 
-struct StageConfig {
+struct CanvasConfig {
 
 };
 
-class Stage : public UIComponent {
+class Canvas : public UIComponent {
 private:
     UIComponent* lastMotionTarget{nullptr};
-    StageConfig config;
+    CanvasConfig config;
     void HandleEvent(const SDL_Event& event);
 
 public:
-    Stage(SDL_Renderer* renderer, int width, int height);
-    ~Stage();
+    Canvas(SDL_Renderer* renderer, int width, int height);
+    ~Canvas();
 
     void InternalUpdate(const std::vector<SDL_Event>& events);
 

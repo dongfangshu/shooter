@@ -3,13 +3,13 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 
-class Stage;
+class Canvas;
 class AssetManager;
 
 class StartScene : public Scene {
 private:
     SDL_Renderer* renderer;
-    Stage* stage{nullptr};
+    Canvas* canvas{nullptr};
 
     static const int SCREEN_W = 800;
     static const int SCREEN_H = 600;
@@ -21,5 +21,5 @@ public:
     void Init() override;
     void Update() override;
     void Clear() override;
-    Stage* GetStage() override;
+    Canvas* GetCanvas() override;
 };

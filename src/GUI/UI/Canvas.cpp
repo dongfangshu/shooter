@@ -1,16 +1,16 @@
-#include "Stage.h"
+#include "Canvas.h"
 #include "../UpdateContext.h"
 #include <SDL2/SDL.h>
 
-Stage::Stage(SDL_Renderer* renderer, int width, int height)
-    : UIComponent({0, 0, width, height}) {
+Canvas::Canvas(SDL_Renderer* renderer, int width, int height)
+    : UIComponent(width, height) {
     render = renderer;
 }
 
-Stage::~Stage() {
+Canvas::~Canvas() {
 }
 
-void Stage::HandleEvent(const SDL_Event& event) {
+void Canvas::HandleEvent(const SDL_Event& event) {
     if (!IsEnabled()) return;
 
     int x = 0, y = 0;
@@ -83,7 +83,7 @@ void Stage::HandleEvent(const SDL_Event& event) {
     }
 }
 
-void Stage::InternalUpdate(const std::vector<SDL_Event>& events) {
+void Canvas::InternalUpdate(const std::vector<SDL_Event>& events) {
     for (const auto& e : events) {
         HandleEvent(e);
     }
@@ -94,7 +94,7 @@ void Stage::InternalUpdate(const std::vector<SDL_Event>& events) {
     ctx.End();
 }
 
-void Stage::Update(UpdateContext* ctx) {
+void Canvas::Update(UpdateContext* ctx) {
     if (!IsVisible()) return;
     for (auto* child : GetChildren()) {
         if (child->IsVisible())

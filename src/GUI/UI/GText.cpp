@@ -3,15 +3,13 @@
 #include "../TextUtil.h"
 #include "UIConfig.h"
 GText::GText(const std::string& text)
-    : UIComponent({}) {
+    : UIComponent(0, 0) {
         this->text = text;
     if (!text.empty()) {
         int w = 0, h = 0;
         TextUtil::MeasureText(GetFont(), text.c_str(), &w, &h);
-        SDL_Rect r = GetRect();
-        r.w = w;
-        r.h = h;
-        SetRect(r);
+        SetWidth(w);
+        SetHeight(h);
     }
 }
 
@@ -42,7 +40,8 @@ void GText::Update(UpdateContext* ctx) {
     }
     if (!textTexture) return;
     ctx->AddRenderCallback([this](SDL_Renderer* r) {
-        SDL_Rect rect = GetRect();
+        SDL_Point worldPos = GetWorldPosition();
+        SDL_Rect rect = {worldPos.x, worldPos.y, GetWidth(), GetHeight()};
         SDL_RenderCopy(r, textTexture, nullptr, &rect);
     });
 }
@@ -55,6 +54,12 @@ void GText::SetText( const std::string& newText) {
     if (text != newText) {
         text = newText;
         isDirty = true;
+        if (!text.empty()) {
+            int w = 0, h = 0;
+            TextUtil::MeasureText(GetFont(), text.c_str(), &w, &h);
+            SetWidth(w);
+            SetHeight(h);
+        }
     }
 }
 

@@ -3,12 +3,15 @@
 #include "../UpdateContext.h"
 #include "UIConfig.h"
 
-GButton::GButton(SDL_Rect rect)
-	: UIComponent(rect), font(nullptr), onClick(nullptr) {
+GButton::GButton(int width, int height)
+	: UIComponent(width, height), font(nullptr), onClick(nullptr) {
     normalColor = buttonNormalColor;
     hoverColor = buttonHoverColor;
     pressedColor = buttonPressedColor;
     currentColor = normalColor;
+    label = new GText("");
+    AddChild(label);
+    label->SetPosition(SDL_Point{(width - label->GetRect().w) / 2, (height - label->GetRect().h) / 2});
 }
 
 GButton::~GButton() {
@@ -16,10 +19,8 @@ GButton::~GButton() {
 }
 
 void GButton::SetUp() {
-    label = new GText("");
-	AddChild(label);
-    SDL_Rect buttonRect = GetRect();
-    label->SetPosition(SDL_Point{(buttonRect.w - label->GetRect().w) / 2, (buttonRect.h - label->GetRect().h) / 2});
+
+
 }
 
 bool GButton::BubbleEvent(UIEventName name, const UIEvent& ev) {
@@ -51,16 +52,14 @@ bool GButton::BubbleEvent(UIEventName name, const UIEvent& ev) {
 }
 
 void GButton::Update(UpdateContext* ctx) {
-    if (!IsVisible() || !ctx) return;
-    // ctx->AddRenderCallback([this](SDL_Renderer* r) {
-    //     SDL_Rect rect = GetRect();
-    //     SDL_SetRenderDrawColor(r, currentColor.r, currentColor.g, currentColor.b, currentColor.a);
-    //     SDL_RenderFillRect(r, &rect);
-    // });
-    for (auto* child : GetChildren()) {
-        if (child->IsVisible())
-            child->Update(ctx);
-    }
+    if (!IsVisible()) return;
+    ctx->AddRenderCallback([this](SDL_Renderer* r) {
+        SDL_Point worldPos = GetWorldPosition();
+        SDL_Rect rect = {worldPos.x, worldPos.y, GetWidth(), GetHeight()};
+        SDL_SetRenderDrawColor(r, currentColor.r, currentColor.g, currentColor.b, currentColor.a);
+        SDL_RenderFillRect(r, &rect);
+    });
+    UIComponent::Update(ctx);
 }
 
 void GButton::SetOnClick(std::function<void()> callback) {
@@ -72,7 +71,8 @@ std::string GButton::GetText() const {
 }
 
 void GButton::SetText( const std::string& newText) {
-    if (label) label->SetText( newText);
+    label->SetText( newText);
+    label->SetPosition(SDL_Point{(GetWidth() - label->GetRect().w) / 2, (GetHeight() - label->GetRect().h) / 2});
 }
 
 SDL_Color GButton::GetNormalColor() const { 

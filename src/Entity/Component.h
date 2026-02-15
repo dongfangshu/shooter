@@ -15,4 +15,8 @@ public:
     }
     virtual ~Component() {}
     virtual void Update() {}
+    
+    Entity* GetEntity() const {
+        return entity;
+    }
 };

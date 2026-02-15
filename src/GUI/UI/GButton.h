@@ -16,12 +16,12 @@ private:
     SDL_Color currentColor;
     bool isPressed{false};
     bool isHovered{false};
-    GText* label{nullptr};
     std::function<void()> onClick;
 
 public:
-    GButton(SDL_Rect rect);
+    GButton(int width, int height);
     ~GButton();
+    GText* label{nullptr};
 
     void SetUp() override;
     bool BubbleEvent(UIEventName name, const UIEvent& ev) override;
