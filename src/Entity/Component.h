@@ -15,8 +15,9 @@ public:
     }
     virtual ~Component() {}
     virtual void Update() {}
-    
-    Entity* GetEntity() const {
+    virtual void LateUpdate(){};
+    Entity *GetEntity() const
+    {
         return entity;
     }
 };

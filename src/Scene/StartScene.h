@@ -11,13 +11,11 @@ private:
     SDL_Renderer* renderer;
     Canvas* canvas{nullptr};
 
-    static const int SCREEN_W = 800;
-    static const int SCREEN_H = 600;
-
 public:
     StartScene(SDL_Renderer* renderer);
     ~StartScene();
 
+    DEFINE_SCENE_NAME(StartScene);
     void Init() override;
     void Update() override;
     void Clear() override;

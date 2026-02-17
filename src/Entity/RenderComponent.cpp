@@ -2,9 +2,12 @@
 #include "Entity.h"
 #include "RenderManager.h"
 #include "../Debug/Debug.h"
+#include "../Asset/AssetManager.h"
 
-RenderComponent::RenderComponent(Entity* entity) : Component(entity), renderOrder(0), texture(nullptr), color({255, 255, 255, 255}), useTexture(false)
+RenderComponent::RenderComponent(Entity* entity,RenderConfig* config) : Component(entity)
 {
+    this->texture = AssetManager::GetInstance()->LoadTextureAtPath(config->texturePath);
+    this->renderOrder = config->renderOrder;
     // 注册到RenderManager
     RenderManager* renderManager = RenderManager::GetInstance();
     renderManager->RegisterComponent(this);

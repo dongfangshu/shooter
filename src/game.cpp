@@ -64,11 +64,14 @@ bool Game::Init()
     
     // 注册所有场景
     Debug::Log("Registering scenes...");
-    SceneManager::AddScene("StartScene", new StartScene(render));
+    auto startScene = new StartScene(render);
+    SceneManager::AddScene(startScene->GetName(), startScene);
     Debug::Log("StartScene registered");
-    SceneManager::AddScene("GameScene", new GameScene(render));
+    auto gameScene = new GameScene(render);
+    SceneManager::AddScene(gameScene->GetName(), gameScene);
     Debug::Log("GameScene registered");
-    SceneManager::AddScene("EndScene", new EndScene(render));
+    auto endScene = new EndScene(render);
+    SceneManager::AddScene(endScene->GetName(), endScene);
     Debug::Log("EndScene registered");
     
 

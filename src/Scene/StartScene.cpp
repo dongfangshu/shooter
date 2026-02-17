@@ -9,6 +9,7 @@
 #include "../GUI/TextUtil.h"
 #include "../Debug/Debug.h"
 #include <SDL2/SDL_ttf.h>
+#include "../Core/ScreenConstants.h"
 
 StartScene::StartScene(SDL_Renderer* renderer)
     : renderer(renderer){
@@ -24,21 +25,21 @@ Canvas* StartScene::GetCanvas() {
 void StartScene::Init() {
     Debug::Log("StartScene::Init() called");
 
-    canvas = new Canvas(renderer, SCREEN_W, SCREEN_H);
+    canvas = new Canvas(renderer, SCREEN_WIDTH, SCREEN_HEIGHT);
     Debug::Log("Canvas called");
 
     SDL_Texture* bgTex = AssetManager::GetInstance()->LoadTextureAtPath("assets/image/bg.png");
     if (bgTex) {
         GImage* bg = new GImage(bgTex);
-        bg->SetWidth(SCREEN_W);
-        bg->SetHeight(SCREEN_H);
+        bg->SetWidth(SCREEN_WIDTH);
+        bg->SetHeight(SCREEN_HEIGHT);
         canvas->AddChild(bg);
     }
 
     SDL_Color textColor = {255, 255, 255, 255};
     GText* titleText = new GText("太空大战");
     canvas->AddChild(titleText);
-    titleText->SetPosition({(SCREEN_W - titleText->GetRect().w) / 2, 120});
+    titleText->SetPosition({(SCREEN_WIDTH - titleText->GetRect().w) / 2, 120});
     titleText->SetColor(textColor);
 
     // GText* hintText = new GText("按下任意键进入游戏");
@@ -54,7 +55,7 @@ void StartScene::Init() {
     canvas->AddChild(startBtn);
     startBtn->label->SetColor(textColor);
     startBtn->SetText("开始游戏");
-    startBtn->SetPosition({(SCREEN_W - btnWidth) / 2, 480});
+    startBtn->SetPosition({(SCREEN_WIDTH - btnWidth) / 2, 480});
     startBtn->SetOnClick([]() {
         Debug::Log("Start button clicked, changing to GameScene");
         SceneManager::ChangeScene("GameScene");

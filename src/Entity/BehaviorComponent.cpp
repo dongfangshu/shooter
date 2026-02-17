@@ -1,42 +1,26 @@
 #include "BehaviorComponent.h"
-BehaviorComponent::BehaviorComponent(Entity* entity, BehaviorConfig* config) : Component(entity), config(config), behavior(nullptr)
+BehaviorComponent::BehaviorComponent(Entity* entity, BehaviorConfig* config) : Component(entity)
 {
     for (auto behavior : config->behaviors)
     {
+        behavior->entity = entity;
         behavior->Start();
+        behaviors.push_back(behavior);
     }
 }
 void BehaviorComponent::Update()
 {
-    for (auto behavior : config->behaviors)
-    {
-        behavior->Update();
-    }
-    if (behavior)
+    for (auto behavior : behaviors)
     {
         behavior->Update();
     }
 }
-void BehaviorComponent::SetBehavior(BaseBehavior* behavior)
-{
-    this->behavior = behavior;
-    if (behavior)
-    {
-        behavior->Start();
-    }
-}
-BaseBehavior* BehaviorComponent::GetBehavior() const
-{
-    return behavior;
-}
+
 BehaviorComponent::~BehaviorComponent()
 {
-    for (auto behavior : config->behaviors)
+    for (auto behavior : behaviors)
     {
-        delete behavior;
-    }
-    if (behavior)
-    {
+        behavior->Destroy();
         delete behavior;
     }
 }

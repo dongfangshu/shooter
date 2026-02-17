@@ -1,5 +1,7 @@
+#pragma once
 #include "Component.h"
 #include <SDL2/SDL.h>
+#include "EntityConfig.h"
 
 class RenderComponent:public Component
 {
@@ -10,7 +12,7 @@ private:
     bool useTexture;
 
 public:
-    RenderComponent(Entity* entity);
+    RenderComponent(Entity* entity,RenderConfig* config);
     ~RenderComponent();
 
     void SetTexture(SDL_Texture* texture);

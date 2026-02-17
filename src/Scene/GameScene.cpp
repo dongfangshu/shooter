@@ -2,7 +2,7 @@
 #include "../Entity/EntityManager.h"
 #include "../Entity/EntityConfig.h"
 #include "../Entity/PositionComponent.h"
-#include "../Entity/MovementComponent.h"
+#include "../Entity/Movecomponent.h"
 #include "../Entity/CollisionComponent.h"
 #include "../Entity/BehaviorComponent.h"
 #include "../Entity/RenderComponent.h"
@@ -34,13 +34,6 @@ void GameScene::Init()
     // 初始化Player
     Player* player = Player::GetInstance();
     player->Init(renderer);
-    
-    // 获取玩家实体并添加RenderComponent
-    Entity* playerEntity = player->GetPlayerEntity();
-    if (playerEntity) {
-        RenderComponent* renderComponent = new RenderComponent(playerEntity);
-        playerEntity->AddComponent(renderComponent);
-    }
 }
 
 void GameScene::Update()
@@ -48,6 +41,8 @@ void GameScene::Update()
     EntityManager* entityManager = EntityManager::GetInstance();
     entityManager->Update();
     collisionManager->Update();
+
+    entityManager->LateUpdate();
     
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);

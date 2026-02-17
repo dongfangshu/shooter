@@ -22,7 +22,7 @@ struct CollisionConfig
 
 struct BehaviorConfig
 {
-    int behaviorType;
+    // int behaviorType;
     std::vector<BaseBehavior*> behaviors;
 };
 struct RenderConfig

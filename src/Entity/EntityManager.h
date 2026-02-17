@@ -2,9 +2,10 @@
 #include "Entity.h"
 #include "EntityConfig.h"
 #include "PositionComponent.h"
-#include "MovementComponent.h"
+#include "Movecomponent.h"
 #include "CollisionComponent.h"
 #include "BehaviorComponent.h"
+#include "RenderComponent.h"
 #include <unordered_map>
 
 class EntityManager
@@ -25,6 +26,7 @@ public:
     Entity* GetEntity(int entityID);
     void RemoveEntity(int entityID);
     void Update();
+    void LateUpdate();
     
     EntityManager(const EntityManager&) = delete;
     EntityManager& operator=(const EntityManager&) = delete;

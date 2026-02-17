@@ -13,6 +13,7 @@ public:
     EndScene(SDL_Renderer* renderer);
     ~EndScene();
     
+    DEFINE_SCENE_NAME(EndScene);
     void Init() override;
     void Update() override;
     void Clear() override;

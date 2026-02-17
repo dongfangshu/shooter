@@ -46,7 +46,7 @@ EntityHandle EntityManager::AddEntity(EntityConfig* config)
     
     if (config->movementConfig != nullptr)
     {
-        entity->AddComponent(new MovementComponent(entity, config->movementConfig));
+        entity->AddComponent(new MoveComponent(entity, config->movementConfig));
     }
     
     if (config->collisionConfig != nullptr)
@@ -57,6 +57,10 @@ EntityHandle EntityManager::AddEntity(EntityConfig* config)
     if (config->behaviorConfig != nullptr)
     {
         entity->AddComponent(new BehaviorComponent(entity, config->behaviorConfig));
+    }
+    if (config->renderConfig != nullptr)
+    {
+        entity->AddComponent(new RenderComponent(entity,config->renderConfig));
     }
     
     entities[entityID] = entity;
@@ -88,5 +92,12 @@ void EntityManager::Update()
     for (auto& pair : entities)
     {
         pair.second->Update();
+    }
+}
+void EntityManager::LateUpdate()
+{
+    for (auto& pair : entities)
+    {
+        pair.second->LateUpdate();
     }
 }

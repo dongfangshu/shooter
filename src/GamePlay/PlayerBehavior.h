@@ -1,19 +1,14 @@
 #pragma once
 #include "../Entity/BaseBehavior.h"
-
-class Entity;
+#include "../Entity/PositionComponent.h"
+#include "SDL2/SDL.h"
 
 class PlayerBehavior : public BaseBehavior {
 private:
-    Entity* entity;
-    float speed;
+    // 检查玩家是否可以向指定方向移动
+    bool CanMoveInDirection(PositionComponent* position, SDL_FPoint direction,float width,float height);
 
 public:
-    PlayerBehavior(Entity* entity);
-    ~PlayerBehavior();
-
     void Start() override;
     void Update() override;
-    void SetSpeed(float speed);
-    float GetSpeed() const;
 };

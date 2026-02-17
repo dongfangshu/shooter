@@ -8,12 +8,14 @@ class GameScene : public Scene
 {
 private:
     SDL_Renderer* renderer;
+    EntityHandle playerHandle;
     CollisionManager* collisionManager;
     
 public:
     GameScene(SDL_Renderer* renderer);
     ~GameScene();
     
+    DEFINE_SCENE_NAME(GameScene);
     void Init() override;
     void Update() override;
     void Clear() override;

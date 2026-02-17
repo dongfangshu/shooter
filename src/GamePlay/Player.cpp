@@ -2,10 +2,11 @@
 #include "../Entity/EntityManager.h"
 #include "../Entity/EntityConfig.h"
 #include "../Entity/PositionComponent.h"
-#include "../Entity/MovementComponent.h"
+#include "../Entity/Movecomponent.h"
 #include "../Entity/CollisionComponent.h"
 #include "../Entity/BehaviorComponent.h"
 #include "PlayerBehavior.h"
+#include "../Core/ScreenConstants.h"
 
 Player* Player::instance = nullptr;
 
@@ -35,8 +36,8 @@ void Player::Init(SDL_Renderer* renderer) {
     EntityConfig* playerConfig = new EntityConfig();
     
     playerConfig->positionConfig = new PositionConfig();
-    playerConfig->positionConfig->x = 400.0f;
-    playerConfig->positionConfig->y = 500.0f;
+    playerConfig->positionConfig->x = SCREEN_WIDTH / 2;
+    playerConfig->positionConfig->y = SCREEN_HEIGHT - 64.0f;
     
     playerConfig->movementConfig = new MovementConfig();
     playerConfig->movementConfig->speed = 5.0f;
@@ -46,18 +47,13 @@ void Player::Init(SDL_Renderer* renderer) {
     playerConfig->collisionConfig->height = 64.0f;
     
     playerConfig->behaviorConfig = new BehaviorConfig();
-    playerConfig->behaviorConfig->behaviorType = 1;
+    playerConfig->behaviorConfig->behaviors.push_back(new PlayerBehavior());
+
+    playerConfig->renderConfig = new RenderConfig();
+    playerConfig->renderConfig->renderOrder = 100;
+    playerConfig->renderConfig->texturePath = "assets/image/SpaceShip.png";
     
     playerHandle = entityManager->AddEntity(playerConfig);
-    
-    // 获取玩家实体并添加PlayerBehavior
-    Entity* player = entityManager->GetEntity(playerHandle.entityID);
-    if (player) {
-        BehaviorComponent* behaviorComponent = player->GetComponent<BehaviorComponent>();
-        if (behaviorComponent) {
-            behaviorComponent->SetBehavior(new PlayerBehavior(player));
-        }
-    }
     
     delete playerConfig;
 }

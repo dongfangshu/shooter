@@ -10,10 +10,9 @@
 #include "Debug/Debug.h"
 #include "game.h"
 #include "Debug/StackTrace.h"
+#include "Core/ScreenConstants.h"
 SDL_Window *window;
 Game *game;
-const int WIDTH = 800;
-const int HEIGHT = 600;
 
 int main(int argc, char **argv)
 {
@@ -51,8 +50,8 @@ int main(int argc, char **argv)
         "shooter game",  // 窗口标题
         initPosX,        // 窗口X位置
         initPosY,        // 窗口Y位置
-        WIDTH,           // 窗口宽度
-        HEIGHT,          // 窗口高度
+        SCREEN_WIDTH,           // 窗口宽度
+        SCREEN_HEIGHT,          // 窗口高度
         SDL_WINDOW_SHOWN // 窗口标志
     );
     if (window == NULL)
