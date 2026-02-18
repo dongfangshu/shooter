@@ -2,11 +2,14 @@
 #include <SDL2/SDL.h>
 #include <string>
 #include <vector>
-#include "BaseBehavior.h"
+
+// 前向声明
+class BaseBehavior;
 struct PositionConfig
 {
     float x;
     float y;
+    float angle;
 };
 
 struct MovementConfig

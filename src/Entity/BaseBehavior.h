@@ -1,6 +1,7 @@
 #pragma once
 
-class Entity;
+#include "Entity.h"
+#include "EntityConfig.h"
 
 class BaseBehavior
 {
@@ -9,8 +10,8 @@ public:
     virtual void Start() {}
     virtual void Update() {}
     virtual void Destroy() {}
-    virtual void OnCollisionEnter(Entity* other) {}
-    virtual void OnCollisionExit(Entity* other) {}
+    virtual void OnCollisionEnter(EntityHandle other) {}
+    virtual void OnCollisionExit(EntityHandle other) {}
 };
 
 

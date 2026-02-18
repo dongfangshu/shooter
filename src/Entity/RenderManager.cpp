@@ -59,7 +59,8 @@ void RenderManager::Update() {
 
             SDL_Texture* texture = component->GetTexture();
             if (texture) {
-                SDL_RenderCopy(renderer, texture, nullptr, &rect);
+                // SDL_RenderCopy(renderer, texture, nullptr, &rect);
+                SDL_RenderCopyEx(renderer, texture, nullptr, &rect, position->GetAngle(), nullptr, SDL_FLIP_NONE);
             } else {
                 SDL_Color color = component->GetColor();
                 SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
