@@ -1,7 +1,7 @@
 #include "PlayerBehavior.h"
 #include "../Entity/Entity.h"
 #include "../Entity/PositionComponent.h"
-#include "../Entity/Movecomponent.h"
+#include "../Entity/MoveComponent.h"
 #include "../Input/InputManager.h"
 #include "../Core/ScreenConstants.h"
 #include "../Entity/EntityManager.h"

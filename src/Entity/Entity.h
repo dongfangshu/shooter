@@ -1,7 +1,7 @@
 #pragma once
 #include "Component.h"
 #include "PositionComponent.h"
-#include "Movecomponent.h"
+#include "MoveComponent.h"
 #include "CollisionComponent.h"
 #include "BehaviorComponent.h"
 #include <unordered_map>

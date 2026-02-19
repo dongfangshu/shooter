@@ -6,7 +6,9 @@
 #include <chrono>
 #include <filesystem> // C++17
 #include "Asset/AssetManager.h"
+#ifdef _WIN32
 #include <windows.h>
+#endif
 #include "Debug/Debug.h"
 #include "game.h"
 #include "Debug/StackTrace.h"
@@ -16,14 +18,19 @@ Game *game;
 
 int main(int argc, char **argv)
 {
-    StackTrace::Initialize();
-    
+    // StackTrace::Initialize();
+    #ifdef _WIN32
     SetConsoleOutputCP(CP_UTF8);
     SetConsoleCP(CP_UTF8);
+    #endif
     Debug::Log("当前工作目录: " + std::filesystem::current_path().string());
 
     // 初始化sdl
+    #ifdef __linux__
+    if (SDL_Init(SDL_INIT_EVERYTHING & ~SDL_INIT_AUDIO) != 0)
+    #elif _WIN32
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
+    #endif
     {
         Debug::Error("SDL_Init Error: " + std::string(SDL_GetError()));
         return 1;

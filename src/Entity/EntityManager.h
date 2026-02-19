@@ -2,7 +2,7 @@
 #include "Entity.h"
 #include "EntityConfig.h"
 #include "PositionComponent.h"
-#include "Movecomponent.h"
+#include "MoveComponent.h"
 #include "CollisionComponent.h"
 #include "BehaviorComponent.h"
 #include "RenderComponent.h"

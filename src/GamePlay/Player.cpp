@@ -2,7 +2,7 @@
 #include "../Entity/EntityManager.h"
 #include "../Entity/EntityConfig.h"
 #include "../Entity/PositionComponent.h"
-#include "../Entity/Movecomponent.h"
+#include "../Entity/MoveComponent.h"
 #include "../Entity/CollisionComponent.h"
 #include "../Entity/BehaviorComponent.h"
 #include "PlayerBehavior.h"
