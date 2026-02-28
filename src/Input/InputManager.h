@@ -3,6 +3,11 @@
 #include <functional>
 #include <unordered_map>
 #include <queue>
+
+#ifdef _WIN32
+#include <windows.h>
+#endif
+
 class InputManager
 {
 private:
@@ -11,8 +16,23 @@ private:
     std::unordered_map<SDL_Keycode, bool> keyStates;
     std::queue<SDL_Event> eventQueue;
     
+#ifdef _WIN32
+    HKL originalKeyboardLayout;  // 保存原始键盘布局
+#endif
+    
     InputManager();
     ~InputManager();
+
+public:
+    // 初始化时调用，切换到英文输入法
+    void Initialize();
+
+    // 退出时恢复原始键盘布局
+    void RestoreOriginalInputMethod();
+
+private:
+    // 切换到英文输入法（仅Windows）
+    void SwitchToEnglishInputMethod();
 
 public:
     static InputManager* GetInstance();

@@ -16,7 +16,12 @@ Game::Game(SDL_Window *window)
 }
 Game::~Game()
 {
-    InputManager::DestroyInstance();
+    // 退出前恢复原始键盘布局（如果 InputManager 已初始化）
+    if (InputManager::GetInstance() != nullptr)
+    {
+        InputManager::GetInstance()->RestoreOriginalInputMethod();
+        InputManager::DestroyInstance();
+    }
     
     //if (assetManager != nullptr) {
     //    delete assetManager;
@@ -57,9 +62,13 @@ bool Game::Init()
     Debug::Log("SDL_CreateRenderer success");
     AssetManager::GetInstance()->Init(render);
     
+    // 禁用文本输入模式，确保游戏按键（如 WASD）不被中文输入法拦截
+    SDL_StopTextInput();
+    Debug::Log("SDL_StopTextInput - disabled text input for game controls");
+    
     // 初始化输入管理器
     Debug::Log("Initializing InputManager...");
-    InputManager::GetInstance();
+    InputManager::GetInstance()->Initialize();
     Debug::Log("InputManager initialized");
     
     // 注册所有场景
