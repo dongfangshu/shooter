@@ -36,6 +36,7 @@ void EntityManager::DestroyInstance()
 
 EntityHandle EntityManager::AddEntity(EntityConfig* config)
 {
+    // 同步创建实体
     auto entity = new Entity();
     int entityID = nextEntityID++;
     
@@ -64,7 +65,28 @@ EntityHandle EntityManager::AddEntity(EntityConfig* config)
     }
     
     entities[entityID] = entity;
+    
+    // 删除配置
+    delete config;
+    
     return EntityHandle(entityID);
+}
+
+void EntityManager::ProcessPendingEntities()
+{
+    // 处理待移除的实体（延迟移除）
+    while (!pendingRemoveEntities.empty())
+    {
+        int entityID = pendingRemoveEntities.front();
+        pendingRemoveEntities.pop();
+        
+        auto it = entities.find(entityID);
+        if (it != entities.end())
+        {
+            delete it->second;
+            entities.erase(it);
+        }
+    }
 }
 
 Entity* EntityManager::GetEntity(int entityID)
@@ -79,16 +101,16 @@ Entity* EntityManager::GetEntity(int entityID)
 
 void EntityManager::RemoveEntity(int entityID)
 {
-    auto it = entities.find(entityID);
-    if (it != entities.end())
-    {
-        delete it->second;
-        entities.erase(it);
-    }
+    // 将实体ID加入待移除队列
+    pendingRemoveEntities.push(entityID);
 }
 
 void EntityManager::Update()
 {
+    // 处理队列中的延迟移除
+    ProcessPendingEntities();
+    
+    // 更新所有实体
     for (auto& pair : entities)
     {
         pair.second->Update();
@@ -100,4 +122,9 @@ void EntityManager::LateUpdate()
     {
         pair.second->LateUpdate();
     }
+}
+
+size_t EntityManager::GetEntityCount() const
+{
+    return entities.size();
 }

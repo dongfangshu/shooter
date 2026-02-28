@@ -4,12 +4,17 @@
 #include "../Entity/EntityConfig.h"
 #include "../Entity/CollisionManager.h"
 
+class Canvas;
+class GText;
+
 class GameScene : public Scene
 {
 private:
     SDL_Renderer* renderer;
     EntityHandle playerHandle;
     CollisionManager* collisionManager;
+    Canvas* canvas;
+    GText* debugText;
     
 public:
     GameScene(SDL_Renderer* renderer);
@@ -19,4 +24,5 @@ public:
     void Init() override;
     void Update() override;
     void Clear() override;
+    Canvas* GetCanvas() override;
 };
