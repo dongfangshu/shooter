@@ -85,14 +85,17 @@ void PlayerBehavior::CheckFire()
     {
         // 发射子弹
         auto position = entity->GetComponent<PositionComponent>();
+        auto collision = entity->GetComponent<CollisionComponent>();
         auto direction = position->GetForward();
-        auto spawnPos = position->GetPosition();
-        spawnPos.x += direction.x;
-        spawnPos.y += direction.y;
+        
+        // 从玩家中心发射
+        float spawnX = position->GetX() + collision->GetWidth() / 2;
+        float spawnY = position->GetY() + collision->GetHeight() / 2;
+        
         auto bulletConfig = new EntityConfig();
         bulletConfig->positionConfig = new PositionConfig();
-        bulletConfig->positionConfig->x = spawnPos.x;
-        bulletConfig->positionConfig->y = spawnPos.y;
+        bulletConfig->positionConfig->x = spawnX;
+        bulletConfig->positionConfig->y = spawnY;
         bulletConfig->movementConfig = new MovementConfig();
         bulletConfig->movementConfig->speed = 10.0f;
         bulletConfig->collisionConfig = new CollisionConfig();
