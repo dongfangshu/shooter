@@ -55,7 +55,7 @@ void Player::Init(SDL_Renderer* renderer) {
     
     playerHandle = entityManager->AddEntity(playerConfig);
     
-    delete playerConfig;
+    // AddEntity 内部会删除 playerConfig，无需手动删除
 }
 
 EntityHandle Player::GetPlayerHandle() const {

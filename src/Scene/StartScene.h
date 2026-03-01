@@ -18,6 +18,7 @@ public:
     DEFINE_SCENE_NAME(StartScene);
     void Init() override;
     void Update() override;
+    void Render(SDL_Renderer* renderer) override;
     void Clear() override;
     Canvas* GetCanvas() override;
 };

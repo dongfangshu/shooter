@@ -89,3 +89,20 @@ void StartScene::Clear() {
     inputManager->UnregisterKeyPress(SDLK_SPACE);
     inputManager->UnregisterKeyPress(SDLK_RETURN);
 }
+
+void StartScene::Render(SDL_Renderer* renderer)
+{
+    // 清除屏幕
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+    SDL_RenderClear(renderer);
+    
+    // 渲染UI
+    if (canvas)
+    {
+        // 创建一个空的 events 向量来触发 Update
+        std::vector<SDL_Event> events;
+        canvas->InternalUpdate(events);
+    }
+    
+    SDL_RenderPresent(renderer);
+}

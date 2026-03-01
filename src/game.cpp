@@ -48,6 +48,7 @@ void Game::Run()
             InputManager::GetInstance()->HandleEvent(event);
         }
         LogicUpdate(frameEvents);
+        RenderLoop();
         SDL_Delay(1000 / FRAME_RATE);
         FRAME++;
     }
@@ -120,7 +121,8 @@ void Game::LogicUpdate(const std::vector<SDL_Event>& frameEvents)
 
 void Game::RenderLoop()
 {
-    SDL_RenderClear(render);
-    // 渲染游戏元素
-    SDL_RenderPresent(render);
+    if (SceneManager::currentScene != nullptr)
+    {
+        SceneManager::currentScene->Render(render);
+    }
 }

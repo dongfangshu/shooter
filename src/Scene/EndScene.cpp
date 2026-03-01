@@ -27,6 +27,12 @@ void EndScene::Init()
 
 void EndScene::Update()
 {
+    // 逻辑更新在 Update 中处理
+}
+
+void EndScene::Render(SDL_Renderer* renderer)
+{
+    // 清除屏幕
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
     

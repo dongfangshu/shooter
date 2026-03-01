@@ -59,6 +59,17 @@ void GameScene::Update()
 
     entityManager->LateUpdate();
     
+    // 更新debug文本显示当前entity数量
+    if (debugText)
+    {
+        int entityCount = entityManager->GetEntityCount();
+        debugText->SetText("Entities: " + std::to_string(entityCount));
+    }
+}
+
+void GameScene::Render(SDL_Renderer* renderer)
+{
+    // 清除屏幕
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
     
@@ -66,11 +77,12 @@ void GameScene::Update()
     RenderManager* renderManager = RenderManager::GetInstance();
     renderManager->Update();
     
-    // 更新debug文本显示当前entity数量
-    if (debugText)
+    // 渲染UI - 使用 Canvas 的 InternalUpdate 触发渲染
+    if (canvas)
     {
-        int entityCount = entityManager->GetEntityCount();
-        debugText->SetText("Entities: " + std::to_string(entityCount));
+        // 创建一个空的 events 向量来触发 Update
+        std::vector<SDL_Event> events;
+        canvas->InternalUpdate(events);
     }
     
     SDL_RenderPresent(renderer);

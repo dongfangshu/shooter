@@ -7,8 +7,8 @@ UpdateContext::~UpdateContext() {
 }
 
 void UpdateContext::Begin() {
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-    SDL_RenderClear(renderer);
+    //SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+    //SDL_RenderClear(renderer);
 }
 
 void UpdateContext::End() {
@@ -16,7 +16,7 @@ void UpdateContext::End() {
         callback(renderer);
     }
     renderCallbacks.clear();
-    SDL_RenderPresent(renderer);
+    //SDL_RenderPresent(renderer);
 }
 
 void UpdateContext::AddRenderCallback(std::function<void(SDL_Renderer*)> callback) {
