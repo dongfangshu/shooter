@@ -1,4 +1,5 @@
 #include "PlayerBehavior.h"
+#include <memory>
 #include "../Entity/Entity.h"
 #include "../Entity/PositionComponent.h"
 #include "../Entity/MoveComponent.h"
@@ -54,26 +55,40 @@ void PlayerBehavior::CheckMove()
     auto position = entity->GetComponent<PositionComponent>();
     auto move = entity->GetComponent<MoveComponent>();
     auto collision = entity->GetComponent<CollisionComponent>();
-    auto speed = move->GetSpeed();
     SDL_FPoint moveDelta = {0, 0};
-    // 检测键盘输入并移动玩家
+    
+    // 检测键盘输入，只传递方向（不包含速度值）
+    // 速度值现在由 MoveComponent 管理并乘以 deltaTime
     if (inputManager->IsKeyPressed(SDLK_w))
     {
-        moveDelta = SDL_FPoint{0, -speed};
+        moveDelta = SDL_FPoint{0, -1.0f};  // 向上移动
     }
     if (inputManager->IsKeyPressed(SDLK_s))
     {
-        moveDelta = SDL_FPoint{0, speed};
+        moveDelta = SDL_FPoint{0, 1.0f};   // 向下移动
     }
     if (inputManager->IsKeyPressed(SDLK_a))
     {
-        moveDelta = SDL_FPoint(-speed, 0);
+        moveDelta = SDL_FPoint{-1.0f, 0};  // 向左移动
     }
     if (inputManager->IsKeyPressed(SDLK_d))
     {
-        moveDelta = SDL_FPoint(speed, 0);
+        moveDelta = SDL_FPoint{1.0f, 0};   // 向右移动
     }
-    if ((moveDelta.x != 0 || moveDelta.y != 0) && CanMoveInDirection(position, moveDelta, collision->GetWidth(), collision->GetHeight()))
+    
+    // 处理斜向移动（同时按下两个方向键）
+    if (inputManager->IsKeyPressed(SDLK_w) && inputManager->IsKeyPressed(SDLK_a))
+        moveDelta = SDL_FPoint{-0.707f, -0.707f};
+    else if (inputManager->IsKeyPressed(SDLK_w) && inputManager->IsKeyPressed(SDLK_d))
+        moveDelta = SDL_FPoint{0.707f, -0.707f};
+    else if (inputManager->IsKeyPressed(SDLK_s) && inputManager->IsKeyPressed(SDLK_a))
+        moveDelta = SDL_FPoint{-0.707f, 0.707f};
+    else if (inputManager->IsKeyPressed(SDLK_s) && inputManager->IsKeyPressed(SDLK_d))
+        moveDelta = SDL_FPoint{0.707f, 0.707f};
+    
+    // 归一化后的方向向量乘以速度（在 MoveComponent 中处理）
+    if ((moveDelta.x != 0 || moveDelta.y != 0) && 
+        CanMoveInDirection(position, moveDelta, collision->GetWidth(), collision->GetHeight()))
     {
         move->DoMove(moveDelta);
     }
@@ -92,21 +107,19 @@ void PlayerBehavior::CheckFire()
         float spawnX = position->GetX() + collision->GetWidth() / 2;
         float spawnY = position->GetY() + collision->GetHeight() / 2;
         
-        auto bulletConfig = new EntityConfig();
-        bulletConfig->positionConfig = new PositionConfig();
+        auto bulletConfig = std::make_unique<EntityConfig>();
+        bulletConfig->positionConfig = std::make_unique<PositionConfig>();
         bulletConfig->positionConfig->x = spawnX;
         bulletConfig->positionConfig->y = spawnY;
-        bulletConfig->movementConfig = new MovementConfig();
-        bulletConfig->movementConfig->speed = 10.0f;
-        bulletConfig->collisionConfig = new CollisionConfig();
-        bulletConfig->collisionConfig->width = 10.0f;
-        bulletConfig->collisionConfig->height = 10.0f;
-        bulletConfig->renderConfig = new RenderConfig();
+        bulletConfig->movementConfig = std::make_unique<MovementConfig>();
+        bulletConfig->movementConfig->speed = 600.0f;  // 子弹每秒移动 600 像素
+        bulletConfig->collisionConfig = std::make_unique<CollisionConfig>(10.0f, 10.0f, false, false);
+        bulletConfig->renderConfig = std::make_unique<RenderConfig>();
         bulletConfig->renderConfig->renderOrder = 100;
         bulletConfig->renderConfig->texturePath = "assets/image/bullet.png";
-        bulletConfig->behaviorConfig = new BehaviorConfig();
-        bulletConfig->behaviorConfig->behaviors.push_back(new BulletBehavior());
-        EntityManager::GetInstance()->AddEntity(bulletConfig);
+        bulletConfig->behaviorConfig = std::make_unique<BehaviorConfig>();
+        bulletConfig->behaviorConfig->behaviors.push_back(std::make_unique<BulletBehavior>());
+        EntityManager::GetInstance()->AddEntity(std::move(bulletConfig));
         
     }
 }

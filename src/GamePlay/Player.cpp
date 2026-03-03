@@ -33,29 +33,26 @@ void Player::DestroyInstance() {
 void Player::Init(SDL_Renderer* renderer) {
     EntityManager* entityManager = EntityManager::GetInstance();
     
-    EntityConfig* playerConfig = new EntityConfig();
+    auto playerConfig = std::make_unique<EntityConfig>();
     
-    playerConfig->positionConfig = new PositionConfig();
-    playerConfig->positionConfig->x = SCREEN_WIDTH / 2;
-    playerConfig->positionConfig->y = SCREEN_HEIGHT - 64.0f;
+    playerConfig->positionConfig = std::make_unique<PositionConfig>();
+    playerConfig->positionConfig->x = SCREEN_WIDTH / 2.0f;
+    playerConfig->positionConfig->y = SCREEN_HEIGHT - 100.0f;
+    playerConfig->positionConfig->angle = 0.0f;  // 贴图朝上，无需旋转
     
-    playerConfig->movementConfig = new MovementConfig();
-    playerConfig->movementConfig->speed = 5.0f;
+    playerConfig->movementConfig = std::make_unique<MovementConfig>();
+    playerConfig->movementConfig->speed = 300.0f;  // 每秒 300 像素
     
-    playerConfig->collisionConfig = new CollisionConfig();
-    playerConfig->collisionConfig->width = 64.0f;
-    playerConfig->collisionConfig->height = 64.0f;
+    playerConfig->collisionConfig = std::make_unique<CollisionConfig>(64.0f, 64.0f, false, false);
     
-    playerConfig->behaviorConfig = new BehaviorConfig();
-    playerConfig->behaviorConfig->behaviors.push_back(new PlayerBehavior());
+    playerConfig->behaviorConfig = std::make_unique<BehaviorConfig>();
+    playerConfig->behaviorConfig->behaviors.push_back(std::make_unique<PlayerBehavior>());
 
-    playerConfig->renderConfig = new RenderConfig();
+    playerConfig->renderConfig = std::make_unique<RenderConfig>();
     playerConfig->renderConfig->renderOrder = 100;
     playerConfig->renderConfig->texturePath = "assets/image/SpaceShip.png";
     
-    playerHandle = entityManager->AddEntity(playerConfig);
-    
-    // AddEntity 内部会删除 playerConfig，无需手动删除
+    playerHandle = entityManager->AddEntity(std::move(playerConfig));
 }
 
 EntityHandle Player::GetPlayerHandle() const {

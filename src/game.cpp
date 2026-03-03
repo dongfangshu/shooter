@@ -6,8 +6,8 @@
 #include "Input/InputManager.h"
 #include "GUI/UI/Canvas.h"
 #include "GUI/UI/UIConfig.h"
-int FRAME = 0;
-const int FRAME_RATE = 60; // 帧率
+#include "Core/Time.h"
+#include <format>
 // bool isRunning = false;
 Game::Game(SDL_Window *window)
 {
@@ -39,7 +39,15 @@ Game::~Game()
 void Game::Run()
 {
     isRunning = true;
+    
+    // 初始化时间管理器
+    Time* time = Time::GetInstance();
+    time->SetTargetFrameRate(60);
+    
     while (isRunning) {
+        // 更新时间
+        time->Update();
+        
         std::vector<SDL_Event> frameEvents;
         SDL_Event event;
         while (SDL_PollEvent(&event)) {
@@ -49,9 +57,13 @@ void Game::Run()
         }
         LogicUpdate(frameEvents);
         RenderLoop();
-        SDL_Delay(1000 / FRAME_RATE);
-        FRAME++;
+        
+        // 限制帧率
+        time->CapFrameRate();
     }
+    
+    // 清理 Time 单例
+    Time::DestroyInstance();
 }
 bool Game::Init()
 {

@@ -8,6 +8,7 @@
 #include "RenderComponent.h"
 #include <unordered_map>
 #include <queue>
+#include <memory>
 
 class EntityManager
 {
@@ -29,7 +30,7 @@ public:
     static EntityManager* GetInstance();
     static void DestroyInstance();
     
-    EntityHandle AddEntity(EntityConfig* config);
+    EntityHandle AddEntity(std::unique_ptr<EntityConfig> config);
     Entity* GetEntity(int entityID);
     void RemoveEntity(int entityID);
     void Update();

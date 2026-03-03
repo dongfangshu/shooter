@@ -2,13 +2,16 @@
 #include "Component.h"
 #include "EntityConfig.h"
 #include "BaseBehavior.h"
+#include <memory>
+#include <vector>
+
 class BehaviorComponent : public Component
 {
 private:
-    std::vector<BaseBehavior*> behaviors;
+    std::vector<std::unique_ptr<BaseBehavior>> behaviors;
 
 public:
     BehaviorComponent(Entity* entity, BehaviorConfig* config);
-    ~BehaviorComponent();
+    ~BehaviorComponent() = default;
     void Update();
 };

@@ -34,7 +34,7 @@ void EntityManager::DestroyInstance()
     }
 }
 
-EntityHandle EntityManager::AddEntity(EntityConfig* config)
+EntityHandle EntityManager::AddEntity(std::unique_ptr<EntityConfig> config)
 {
     // 同步创建实体
     auto entity = new Entity();
@@ -42,32 +42,31 @@ EntityHandle EntityManager::AddEntity(EntityConfig* config)
     
     if (config->positionConfig != nullptr)
     {
-        entity->AddComponent(new PositionComponent(config->positionConfig, entity));
+        entity->AddComponent(new PositionComponent(config->positionConfig.get(), entity));
     }
     
     if (config->movementConfig != nullptr)
     {
-        entity->AddComponent(new MoveComponent(entity, config->movementConfig));
+        entity->AddComponent(new MoveComponent(entity, config->movementConfig.get()));
     }
     
     if (config->collisionConfig != nullptr)
     {
-        entity->AddComponent(new CollisionComponent(config->collisionConfig, entity));
+        entity->AddComponent(new CollisionComponent(config->collisionConfig.get(), entity));
     }
     
     if (config->behaviorConfig != nullptr)
     {
-        entity->AddComponent(new BehaviorComponent(entity, config->behaviorConfig));
+        entity->AddComponent(new BehaviorComponent(entity, config->behaviorConfig.get()));
     }
     if (config->renderConfig != nullptr)
     {
-        entity->AddComponent(new RenderComponent(entity,config->renderConfig));
+        entity->AddComponent(new RenderComponent(entity, config->renderConfig.get()));
     }
     
     entities[entityID] = entity;
     
-    // 删除配置
-    delete config;
+    // config 是 unique_ptr，会自动释放资源
     
     return EntityHandle(entityID);
 }

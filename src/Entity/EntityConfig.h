@@ -2,6 +2,7 @@
 #include <SDL2/SDL.h>
 #include <string>
 #include <vector>
+#include <memory>
 
 // 前向声明
 class BaseBehavior;
@@ -21,12 +22,13 @@ struct CollisionConfig
 {
     float width;
     float height;
+    bool isStatic = false;   // 是否为静态物体
+    bool isTrigger = false;  // 是否为触发器
 };
 
 struct BehaviorConfig
 {
-    // int behaviorType;
-    std::vector<BaseBehavior*> behaviors;
+    std::vector<std::unique_ptr<BaseBehavior>> behaviors;
 };
 struct RenderConfig
 {
@@ -35,29 +37,11 @@ struct RenderConfig
 };
 struct EntityConfig
 {
-    PositionConfig* positionConfig;
-    MovementConfig* movementConfig;
-    CollisionConfig* collisionConfig;
-    BehaviorConfig* behaviorConfig;
-    RenderConfig* renderConfig;
-    
-    EntityConfig()
-    {
-        positionConfig = nullptr;
-        movementConfig = nullptr;
-        collisionConfig = nullptr;
-        behaviorConfig = nullptr;
-        renderConfig = nullptr;
-    }
-    
-    ~EntityConfig()
-    {
-        delete positionConfig;
-        delete movementConfig;
-        delete collisionConfig;
-        delete behaviorConfig;
-        delete renderConfig;
-    }
+    std::unique_ptr<PositionConfig> positionConfig;
+    std::unique_ptr<MovementConfig> movementConfig;
+    std::unique_ptr<CollisionConfig> collisionConfig;
+    std::unique_ptr<BehaviorConfig> behaviorConfig;
+    std::unique_ptr<RenderConfig> renderConfig;
 };
 
 struct EntityHandle
